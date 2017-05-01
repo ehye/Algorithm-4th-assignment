@@ -1,4 +1,4 @@
-package two;
+package deques_and_randomized_queues;
 
 import java.util.Iterator;
 
