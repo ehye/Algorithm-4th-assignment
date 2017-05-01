@@ -1,6 +1,3 @@
-import javax.swing.plaf.synth.Region;
-import javax.xml.ws.EndpointReference;
-
 import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 
 public class Percolation {

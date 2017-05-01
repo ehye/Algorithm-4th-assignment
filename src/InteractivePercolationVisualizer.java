@@ -55,6 +55,7 @@ public class InteractivePercolationVisualizer {
                 StdDraw.show();
             }
             StdDraw.pause(20);
+//            System.out.println(perc.numberOfOpenSites());
         }
     }
 }
