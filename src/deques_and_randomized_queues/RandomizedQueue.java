@@ -1,48 +1,47 @@
 package deques_and_randomized_queues;
 
 import java.util.Iterator;
-
 import edu.princeton.cs.algs4.StdOut;
 import edu.princeton.cs.algs4.StdRandom;
 
 public class RandomizedQueue<Item> implements Iterable<Item> 
 {
-	private int N = 0;
+	private int n = 0;
 	private Item[] items;
 	
 	// construct an empty randomized queue
 	public RandomizedQueue()
 	{
-		items = (Item[]) new Object[10];
+		items = (Item[]) new Object[2];
 	}
 
 	// is the queue empty?
 	public boolean isEmpty()
 	{
-		return N == 0;
+		return n == 0;
 	}
 
 	// return the number of items on the queue
 	public int size()
 	{
-		return N;
+		return n;
 	}
 
 	// add the item
 	public void enqueue(Item item)
 	{
 		if (item == null) throw new java.lang.NullPointerException();
-		if (N == items.length) resize(2 * items.length);
-		items[N++] = item;
+		if (n == items.length) resize(2 * items.length);
+		items[n++] = item;
 	}
 
 	// remove and return a random item
 	public Item dequeue()
 	{
 		if (isEmpty()) throw new java.util.NoSuchElementException();
-		Item item = items[--N];
-		items[N] = null;
-		if (N > 0 && N == items.length/4) resize(items.length/2);
+		Item item = items[--n];
+		items[n] = null;
+		if (n > 0 && n == items.length/4) resize(items.length/2);
 		return item;
 	}
 
@@ -50,21 +49,14 @@ public class RandomizedQueue<Item> implements Iterable<Item>
 	public Item sample()
 	{
 		if (isEmpty()) throw new java.util.NoSuchElementException();
-		items[StdRandom.uniform(N) + 1] = null;
-//		int i = StdRandom.uniform(N) + 1;
-//		Item temp = items[i];
-//		StdOut.println("i = " + i);
-//		items[i] = null;
-//		N--;
-//		if (N > 0 && N == items.length/4) resize(items.length/2);
-		
-		return temp;
+		int index = StdRandom.uniform(n);
+		return items[index];
 	}
 	
 	private void resize(int capacity)
 	{
 		Item[] copy = (Item[]) new Object[capacity];
-		for (int i = 0; i < N; i++)
+		for (int i = 0; i < n; i++)
 		{
 			copy[i] = items[i];
 		}
@@ -79,7 +71,7 @@ public class RandomizedQueue<Item> implements Iterable<Item>
 
 	private class ListIterator implements Iterator<Item>
 	{
-		private int i = N;
+		private int i = n;
 		
 		public boolean hasNext() 
 		{
@@ -101,20 +93,12 @@ public class RandomizedQueue<Item> implements Iterable<Item>
 	// unit testing (optional)
 	public static void main(String[] args)
 	{
+		RandomizedQueue<Integer> rq = new RandomizedQueue<Integer> ();
 		
-		RandomizedQueue<String> deque = new RandomizedQueue<String> ();
-		deque.enqueue("aa");
-		deque.enqueue("bb");
-		deque.enqueue("cc");
-		deque.enqueue("dd");
-		StdOut.println(deque.sample());
-		StdOut.println(deque.sample());
-		StdOut.println(deque.sample());
-		StdOut.println(deque.sample());
-//		deque.dequeue();
-//		deque.dequeue();
-//		deque.dequeue();
-//		deque.dequeue();
-		StdOut.print("size:"+deque.size());
+		rq.enqueue(20);
+        rq.enqueue(5);
+//        StdOut.println(rq.size());
+        StdOut.println(rq.sample()); 
+        StdOut.println(rq.sample());
 	}
 }
