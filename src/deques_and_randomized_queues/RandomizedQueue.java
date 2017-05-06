@@ -39,8 +39,12 @@ public class RandomizedQueue<Item> implements Iterable<Item>
 	public Item dequeue()
 	{
 		if (isEmpty()) throw new java.util.NoSuchElementException();
-		Item item = items[--n];
-		items[n] = null;
+		
+		int index = StdRandom.uniform(n);
+		Item item = items[index];
+		items[index] = items[n-1];
+		items[n-1] = null;
+		n--;
 		if (n > 0 && n == items.length/4) resize(items.length/2);
 		return item;
 	}
@@ -86,7 +90,9 @@ public class RandomizedQueue<Item> implements Iterable<Item>
 		public Item next() 
 		{
 			if (isEmpty()) throw new java.util.NoSuchElementException();
-			return items[--i];			
+			
+			int index = StdRandom.uniform(n);
+			return items[index];
 		}
 	}
 	
@@ -94,11 +100,18 @@ public class RandomizedQueue<Item> implements Iterable<Item>
 	public static void main(String[] args)
 	{
 		RandomizedQueue<Integer> rq = new RandomizedQueue<Integer> ();
-		
-		rq.enqueue(20);
+		Iterator<Integer> it = rq.iterator();		
+		rq.enqueue(1);
+        rq.enqueue(2);
+        rq.enqueue(3);
+        rq.enqueue(4);
         rq.enqueue(5);
-//        StdOut.println(rq.size());
-        StdOut.println(rq.sample()); 
-        StdOut.println(rq.sample());
+        rq.enqueue(6);
+        StdOut.println("Size: " + rq.size());
+        StdOut.println(rq.dequeue());
+        StdOut.println("Size: " + rq.size());
+        StdOut.println(it.next());
+//        StdOut.println(rq.sample()); 
+//        StdOut.println(rq.sample());
 	}
 }

@@ -93,19 +93,27 @@ public class Deque<Item> implements Iterable<Item>
 	
 	private class ListIterator implements Iterator<Item>
 	{
-		private Node current = first;
+		private Node current;
 
 		public Item next() 
 		{
 			if (isEmpty()) throw new java.util.NoSuchElementException();
+			
+			current = first;
 			Item item = current.item;
 			current = current.next;
+			return item;
 
 		}
 		
 		public void remove()
 		{
 			throw new java.lang.UnsupportedOperationException();
+		}
+
+		public boolean hasNext() {
+
+			return n > 0;
 		}
 	}
 
