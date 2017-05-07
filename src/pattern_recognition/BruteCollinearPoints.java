@@ -1,59 +1,67 @@
 package pattern_recognition;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 public class BruteCollinearPoints {
-
-	private int num, count_same = 0, i = 1;
+//	private int num = 0;
+//	private LineSegment[] lineSegments = new LineSegment[5];
 	private Point[] points;
-	private double[] slopes = new double[5];
-	private boolean same_line = false;
+	private ArrayList<LineSegment> lineSegments = new ArrayList<LineSegment>();
 
 	// finds all line segments containing 4 points
-	public BruteCollinearPoints(Point[] points) {
-		checkCornerCases(points);
-		
-		// calculate all slopes
-		for (int i = 0; i < points.length-1;) {
-			double temp = points[0].slopeTo(points[i+1]);
-			slopes[i] = temp; 
-			i++;
-		}
-		Arrays.sort(slopes);
-		// check slopes
-		for (int i = 0; i < points.length-1; i++) {
-			for (int j = i+1; j < points.length-1; j++) {
-				if (slopes[i] == slopes[j]) 
-					count_same++;
-			}
-			if (count_same >= 3) 
-				same_line = true;
-		}
+	public BruteCollinearPoints(Point[] points) {		
+		//checkCornerCases(points);
+//		this.points = new Point[points.length];
+		this.points = points;
+		if (points == null) 
+			throw new java.lang.NullPointerException();
+		for (int i = 0; i < this.points.length - 1; i++) 
+			if (this.points[i].compareTo(this.points[i+1]) == 0)
+				throw new java.lang.IllegalArgumentException();
 		
 		this.points = points;
+		
+		int N = points.length;
+		Arrays.sort(this.points);
+		for (int ip = 0; ip < N; ip++) {
+		    for (int iq = ip + 1; iq < N; iq++) {
+		        for (int ir = iq + 1; ir < N; ir++) {
+		            for (int is = ir + 1; is < N; is++) {
+		            	Point p = this.points[ip];
+		            	Point q = this.points[iq];
+		            	Point r = this.points[ir];
+		                Point s = this.points[is];
+		                double slopeToQ = p.slopeTo(q);
+		                double slopeToR = p.slopeTo(r);
+		                double slopeToS = p.slopeTo(s);
+		                if (slopeToQ == slopeToR && slopeToQ == slopeToS)
+		                		lineSegments.add(new LineSegment(p, s));
+		            }
+		        }
+		    }
+		}
 	}
 
 	// the number of line segments
 	public int numberOfSegments() {
-		return num;
+		return lineSegments.size();
 	}
 
 	// the line segments
 	public LineSegment[] segments() {
-		return null;
+		LineSegment[] result = new LineSegment[lineSegments.size()];
+		for (int i = 0; i < lineSegments.size(); i++) {
+			result[i] = lineSegments.get(i);
+		}
+		return result;
 	}
 	
 	private void checkCornerCases(Point[] points) {
 		if (points == null) 
 			throw new java.lang.NullPointerException();
-		for (int i = 0; i < points.length - 1; i++) {
-			if (points[i] == null )
-				throw new java.lang.NullPointerException();
-			else
-				for (int j = i+1; j < points.length - 1; j++)
-					if (points[i] == points[j])
-						throw new java.lang.IllegalArgumentException();
-		}
+		for (int i = 0; i < this.points.length - 1; i++) 
+			if (this.points[i].compareTo(this.points[i+1]) == 0)
+				throw new java.lang.IllegalArgumentException();
 	}
-
 }

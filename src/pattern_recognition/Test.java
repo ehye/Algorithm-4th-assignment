@@ -7,7 +7,7 @@ import edu.princeton.cs.algs4.StdOut;
 public class Test {
 	
 	public static void main(String[] args) {
-
+		
 	    // read the n points from a file
 	    In in = new In(args[0]);
 	    int n = in.readInt();
@@ -29,10 +29,11 @@ public class Test {
 
 	    // print and draw the line segments
 //	    BruteCollinearPoints collinear = new BruteCollinearPoints(points);
-//	    for (LineSegment segment : collinear.segments()) {
-//	        StdOut.println(segment);
-//	        segment.draw();
-//	    }
-//	    StdDraw.show();
+	    FastCollinearPoints  collinear = new FastCollinearPoints (points);
+	    for (LineSegment segment : collinear.segments()) {
+	        StdOut.println(segment);
+	        segment.draw();
+	    }
+	    StdDraw.show();
 	}
 }
