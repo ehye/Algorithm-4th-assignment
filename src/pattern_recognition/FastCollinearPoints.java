@@ -7,20 +7,62 @@ import edu.princeton.cs.algs4.StdOut;
 
 public class FastCollinearPoints {
 	
+//	private double[] slopes;
+//	private Point origin;
+//	private Point[] others;
 	private Point[] copies;
 	private ArrayList<LineSegment> lineSegments = new ArrayList<LineSegment>();
 	
 	// finds all line segments containing 4 or more points
 	public FastCollinearPoints(Point[] points) {
-		checkCornerCases(points);
+		if (points == null) 
+			throw new java.lang.NullPointerException();
 		
 		copies = new Point[points.length];
-		copies = points;
+		for (int i = 0; i < points.length; i++) {
+			copies[i] = points[i];
+		}
 		
+		// sort by y-coordinate
+		// the endpoints are the first and last points
 		Arrays.sort(copies);
 		
-		
-				
+		// after sort then can check if duplicate
+		for (int i = 0; i < copies.length - 1; i++) 
+			if (copies[i].compareTo(copies[i+1]) == 0)
+				throw new java.lang.IllegalArgumentException();
+	
+		for (int i = 0; i < copies.length - 1; i++) {			
+			Point origin = copies[i]; 			// Think of p as the origin.
+			double[] slopes = new double[copies.length - 1 - i];
+			Point[] others = new Point[copies.length - 1 - i];
+			for (int j = 0; j < copies.length - 1 - i; j++)
+				others[j] = copies[j + 1 + i];
+			
+			// For each other point q, determine the slope it makes with p
+			for (int j = 0; j < others.length; j++)
+				slopes[j] = origin.slopeTo(others[j]);
+			
+			// Sort the points according to the slopes they makes with p
+			Arrays.sort(others, origin.slopeOrder());
+			
+			Arrays.sort(slopes);
+			// Check if any 3 (or more) adjacent points in the 
+			// sorted order have equal slopes with respect to p
+			// If so, these points, together with p, are collinear
+			for (int cnt_same = 0, j = 0; j < slopes.length - 1; j++) {
+//				if (slopes[j] == slopes[j+1] && cnt_same < 3) cnt_same++;
+//				else lineSegments.add(new LineSegment(copies[i], copies[others.length - 1]));
+				if (slopes[j] == slopes[j+1]) {
+					cnt_same++;
+				}
+				if (cnt_same >= 2) {
+//					lineSegments.add(new LineSegment(copies[j], copies[others.length - 1]));
+					lineSegments.add(new LineSegment(origin, others[j + 1]));
+					break;
+				}
+			}
+		}
 	}
 
 	// the number of line segments
@@ -35,14 +77,5 @@ public class FastCollinearPoints {
 			result[i] = lineSegments.get(i);
 		}
 		return result;
-	}
-	
-	private void checkCornerCases(Point[] points) {
-		if (points == null) 
-			throw new java.lang.NullPointerException();
-		for (int i = 0; i < points.length - 1; i++) {
-			if (points[i].compareTo(points[i+1]) == 0)
-				throw new java.lang.IllegalArgumentException();
-		}
 	}
 }
