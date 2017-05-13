@@ -18,8 +18,6 @@ public class BruteCollinearPoints {
 		for (int i = 0; i < points.length; i++) {
 			copies[i] = points[i];
 		}
-//		copies = points;
-//		copies[0] = new Point(25,25);
 		
 		// sort by y-coordinate
 		// the endpoints are the first and last points

@@ -23,6 +23,21 @@ public class FastCollinearPoints {
 		// sort by y-coordinate
 		// the endpoints are the first and last points
 		Arrays.sort(copies);
+//		
+//		// sort by distance
+//		// most left-down
+//		int index = 0;
+//		int min = copies[0].getX() + copies[0].getY();
+//		for (int i = 1; i < copies.length - 1; i++) {
+//			int x = copies[i].getX();
+//			int y = copies[i].getY();
+//			int new_min = x + y;
+//			if (new_min < min) {
+//				min = new_min;
+//				index = i;
+//			}
+//		}
+//		
 		
 		// after sort then can check if duplicate
 		for (int i = 0; i < copies.length - 1; i++) 
