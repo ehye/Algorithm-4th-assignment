@@ -8,22 +8,21 @@ package kd_Trees;
 import java.util.TreeSet;
 import edu.princeton.cs.algs4.RectHV;
 import edu.princeton.cs.algs4.Point2D;
-import edu.princeton.cs.algs4.Queue;
 import edu.princeton.cs.algs4.StdDraw;
 
 public class KdTree {
 	
-	private static class Node {
+	private static class KdNode {
 		private boolean isVertical;
 		private Point2D p;
 		// the axis-aligned rectangle corresponding to this node
 //		private RectHV rect;
 		// the left/bottom subtree
-		private Node lb;
+		private KdNode lb;
 		// the right/top subtree
-		private Node rt;
+		private KdNode rt;
 				
-		public Node(Point2D p, boolean isVertical) {
+		public KdNode(Point2D p, boolean isVertical) {
 			this.p = p;
 			this.isVertical = isVertical;
 			this.lb = null;
@@ -32,7 +31,7 @@ public class KdTree {
 	}
 	
 	private int size;
-	private Node root;
+	private KdNode root;
     private final RectHV RECT = new RectHV(0, 0, 1, 1);
 
 	// construct an empty set of points 
@@ -53,36 +52,25 @@ public class KdTree {
 
 	// add the point to the set (if it is not already in the set)
 	public void insert(Point2D p) {
-		if (p == null) throw new java.lang.NullPointerException();
+		if (p == null) return;
 		this.root = insert(root, p, true);
-		// 'true': the first point is vertical insert
 	}
 		
-	private Node insert(Node node, Point2D p, boolean isVertical) {
+	private KdNode insert(KdNode node, Point2D p, boolean isVertical) {    
 		// if it is not in the set, create new node
 		if (node == null) {
 			size++;
-			return new Node(p, isVertical);
+			return new KdNode(p, isVertical);
 		}
 		
 		// already in, return it
-		if (node.p.equals(p))
-			return node;
+		if (p.equals(node.p)) return node;
 		
 		// else insert it
-		// isVertical = !parent.isVertical
-//		int cmp = p.compareTo(node.p);
-//		if (cmp < 0) {
-//            node.lb = insert(node.lb, p, !node.isVertical);
-//        }
-//		if (cmp > 0){
-//            node.rt = insert(node.rt, p, !node.isVertical);
-//        }
-//        return node;
-		
 		if (node.isVertical && p.x() < node.p.x() || !node.isVertical && p.y() < node.p.y()) {
 			node.lb = insert(node.lb, p, !node.isVertical);
-        } else {
+        }
+		else {
             node.rt = insert(node.rt, p, !node.isVertical);
         }
         return node;
@@ -90,15 +78,28 @@ public class KdTree {
 	
 	// does the set contain point p? 
 	public boolean contains(Point2D p) {
-		if (p ==null) return false;
-		return contains(root, p, false);
+		if (p == null) return false;
+		return contains(root, p);
 	}
 	
-	private boolean contains(Node node, Point2D p, boolean orientation) {
-        int cmp = p.compareTo(node.p);
-        if      (cmp < 0) return contains(node.lb, p, !orientation);
-        else if (cmp > 0) return contains(node.rt, p, !orientation);
-        else return true;
+	private boolean contains(KdNode node, Point2D p) {        
+		if (p.equals(node.p)) return true;
+		
+		if (node.isVertical && p.x() < node.p.x() || !node.isVertical && p.y() < node.p.y()) {  
+            return contains(node.lb, p);  
+        } else {  
+            return contains(node.rt, p);  
+        }
+		
+//		int cmp = p.compareTo(node.p);
+//		if (node.isVertical) {
+//			if      (cmp < 0) 	return contains(node.lb, p);
+//			else if (cmp > 0) 	return contains(node.rt, p);			
+//		}
+//		else {
+//			if      (cmp < 0) 	return contains(node.lb, p);
+//			else if (cmp > 0) 	return contains(node.rt, p);						
+//		}
 	}
 	
 	// draw all points to standard draw 
@@ -111,7 +112,7 @@ public class KdTree {
 		draw(root, RECT);
 	}
 	
-	private void draw(Node node, RectHV rect) {
+	private void draw(KdNode node, RectHV rect) {
 		if (node == null) return;
 		
 		// drawing the points
@@ -137,7 +138,7 @@ public class KdTree {
 		draw(node.rt, rightRect(rect, node));
 	}
 	
-	private RectHV leftRect(final RectHV rect, final Node node) {
+	private RectHV leftRect(final RectHV rect, final KdNode node) {
         if (node.isVertical) {
             return new RectHV(rect.xmin(), rect.ymin(), node.p.x(), rect.ymax());
         } else {
@@ -145,7 +146,7 @@ public class KdTree {
         }
     }
 
-    private RectHV rightRect(final RectHV rect, final Node node) {
+    private RectHV rightRect(final RectHV rect, final KdNode node) {
         if (node.isVertical) {
             return new RectHV(node.p.x(), rect.ymin(), rect.xmax(), rect.ymax());
         } else {
@@ -160,9 +161,9 @@ public class KdTree {
         return rangeSet;
 	}
 	
-	private void range(final Node node, final RectHV qrect, final RectHV rect, final TreeSet<Point2D> rangeSet) {
+	private void range(final KdNode node, final RectHV qrect, final RectHV rect, final TreeSet<Point2D> rangeSet) {
         if (node == null) return;
-
+        
         if (rect.intersects(qrect)) {									// if query rect is in rectangle
             final Point2D p = new Point2D(node.p.x(), node.p.y());
             if (rect.contains(p)) rangeSet.add(p);						// find the point
@@ -193,28 +194,10 @@ public class KdTree {
 
 	// a nearest neighbor in the set to point p; null if the set is empty 
 	public Point2D nearest(Point2D p) {
-//        return nearest(root, RECT, p, null);
-		if (root == null) return null;
-        Point2D retp = null;
-        double mindis = Double.MAX_VALUE;
-        Queue<Node> queue = new Queue<Node>();
-        queue.enqueue(root);
-        while (!queue.isEmpty()) {
-            Node x = queue.dequeue();
-            double dis = p.distanceSquaredTo(x.p);
-            if (dis < mindis) {
-                retp = x.p;
-                mindis = dis; 
-            }
-            if (x.lb != null && x.lb.p.distanceSquaredTo(p) < mindis) 
-                queue.enqueue(x.lb);
-            if (x.rt != null && x.rt.p.distanceSquaredTo(p) < mindis) 
-                queue.enqueue(x.rt);
-        }
-        return retp;
+        return nearest(root, RECT, p, null);
 	}
 	
-	private Point2D nearest(final Node node, final RectHV rect, final Point2D p, Point2D candidate) {
+	private Point2D nearest(final KdNode node, final RectHV rect, Point2D p, Point2D candidate) {
         if (node == null) return candidate;
 
         double dqn = 0.0;
