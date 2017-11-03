@@ -56,7 +56,7 @@ public class KdTree {
 		this.root = insert(root, p, true);
 	}
 		
-	private KdNode insert(KdNode node, Point2D p, boolean isVertical) {    
+	private KdNode insert(KdNode node, Point2D p, boolean isVertical) {
 		// if it is not in the set, create new node
 		if (node == null) {
 			size++;
@@ -82,7 +82,7 @@ public class KdTree {
 		return contains(root, p);
 	}
 	
-	private boolean contains(KdNode node, Point2D p) {        
+	private boolean contains(KdNode node, Point2D p) {
 		if (p.equals(node.p)) return true;
 		
 		if (node.isVertical && p.x() < node.p.x() || !node.isVertical && p.y() < node.p.y()) {  
@@ -103,7 +103,7 @@ public class KdTree {
 	}
 	
 	// draw all points to standard draw 
-	public void draw() {      
+	public void draw() {
 		StdDraw.setScale(0, 1);
         StdDraw.setPenColor(StdDraw.BLACK);
         StdDraw.setPenRadius();

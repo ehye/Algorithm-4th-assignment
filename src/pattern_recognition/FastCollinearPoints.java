@@ -3,8 +3,6 @@ package pattern_recognition;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import edu.princeton.cs.algs4.StdOut;
-
 public class FastCollinearPoints {
 	
 	private Point[] copies;
