@@ -24,9 +24,9 @@ public class PrintEnergy {
         
         System.out.printf("Printing energy calculated for each pixel.\n");        
 
-        for (int j = 0; j < sc.height(); j++)
+        for (int j = 0; j < sc.energy_height(); j++)
         {
-            for (int i = 0; i < sc.width(); i++)
+            for (int i = 0; i < sc.energy_width(); i++)
                 System.out.printf("%9.0f ", sc.energy(i, j));
 
             System.out.println();

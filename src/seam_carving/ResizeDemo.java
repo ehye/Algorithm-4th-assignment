@@ -45,7 +45,7 @@ public class ResizeDemo {
         }
         Picture outputImg = sc.picture();
 
-        System.out.printf("new image size is %d columns by %d rows\n", sc.width(), sc.height());
+        System.out.printf("new image size is %d columns by %d rows\n", sc.energy_width(), sc.energy_height());
 
         System.out.println("Resizing time: " + sw.elapsedTime() + " seconds.");
         inputImg.show();
