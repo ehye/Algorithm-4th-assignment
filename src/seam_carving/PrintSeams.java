@@ -20,9 +20,9 @@ public class PrintSeams {
         double totalSeamEnergy = 0;
 
         int[] horizontalSeam = sc.findHorizontalSeam();
-        for (int j = 0; j < sc.energy_height(); j++)
+        for (int j = 0; j < sc.height(); j++)
         {
-            for (int i = 0; i < sc.energy_width(); i++)            
+            for (int i = 0; i < sc.width(); i++)            
             {
                 char lMarker = ' ';
                 char rMarker = ' ';
@@ -47,9 +47,9 @@ public class PrintSeams {
         double totalSeamEnergy = 0;
 
         int[] verticalSeam = sc.findVerticalSeam();
-        for (int j = 0; j < sc.energy_height(); j++)
+        for (int j = 0; j < sc.height(); j++)
         {
-            for (int i = 0; i < sc.energy_width(); i++)            
+            for (int i = 0; i < sc.width(); i++)            
             {
                 char lMarker = ' ';
                 char rMarker = ' ';

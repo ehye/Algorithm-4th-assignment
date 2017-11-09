@@ -24,9 +24,9 @@ public class SCUtility {
 
     public static double[][] toEnergyMatrix(SeamCarver sc)
     {
-        double[][] returnDouble = new double[sc.energy_width()][sc.energy_height()];
-        for (int i = 0; i < sc.energy_width(); i++)
-            for (int j = 0; j < sc.energy_height(); j++)
+        double[][] returnDouble = new double[sc.width()][sc.height()];
+        for (int i = 0; i < sc.width(); i++)
+            for (int j = 0; j < sc.height(); j++)
                 returnDouble[i][j] = sc.energy(i, j);
     
         return returnDouble;        

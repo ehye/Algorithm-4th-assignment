@@ -1,27 +1,25 @@
 package seam_carving;
 
-import edu.princeton.cs.algs4.Picture;
-import edu.princeton.cs.algs4.Stopwatch;
-
-/*************************************************************************
+/******************************************************************************
  *  Compilation:  javac ResizeDemo.java
  *  Execution:    java ResizeDemo input.png columnsToRemove rowsToRemove
- *  Dependencies: SeamCarver.java SCUtility.java Picture.java Stopwatch.java
- *                StdDraw.java
+ *  Dependencies: SeamCarver.java SCUtility.java
  *                
  *
  *  Read image from file specified as command line argument. Use SeamCarver
  *  to remove number of rows and columns specified as command line arguments.
- *  Show the images in StdDraw and print time elapsed to screen.
+ *  Show the images and print time elapsed to screen.
  *
- *************************************************************************/
+ ******************************************************************************/
+
+import edu.princeton.cs.algs4.Picture;
+import edu.princeton.cs.algs4.StdOut;
+import edu.princeton.cs.algs4.Stopwatch;
 
 public class ResizeDemo {
-    public static void main(String[] args)
-    {
-        if (args.length != 3)
-        {
-            System.out.println("Usage:\njava ResizeDemo [image filename] [num cols to remove] [num rows to remove]");
+    public static void main(String[] args) {
+        if (args.length != 3) {
+            StdOut.println("Usage:\njava ResizeDemo [image filename] [num cols to remove] [num rows to remove]");
             return;
         }
 
@@ -29,7 +27,7 @@ public class ResizeDemo {
         int removeColumns = Integer.parseInt(args[1]);
         int removeRows = Integer.parseInt(args[2]); 
 
-        System.out.printf("image is %d columns by %d rows\n", inputImg.width(), inputImg.height());
+        StdOut.printf("image is %d columns by %d rows\n", inputImg.width(), inputImg.height());
         SeamCarver sc = new SeamCarver(inputImg);
 
         Stopwatch sw = new Stopwatch();
@@ -45,9 +43,9 @@ public class ResizeDemo {
         }
         Picture outputImg = sc.picture();
 
-        System.out.printf("new image size is %d columns by %d rows\n", sc.energy_width(), sc.energy_height());
+        StdOut.printf("new image size is %d columns by %d rows\n", sc.width(), sc.height());
 
-        System.out.println("Resizing time: " + sw.elapsedTime() + " seconds.");
+        StdOut.println("Resizing time: " + sw.elapsedTime() + " seconds.");
         inputImg.show();
         outputImg.show();
     }

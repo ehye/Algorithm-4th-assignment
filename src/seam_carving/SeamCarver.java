@@ -1,5 +1,4 @@
 package seam_carving;
-
 import java.awt.Color;
 
 import edu.princeton.cs.algs4.Picture;
@@ -15,8 +14,8 @@ public class SeamCarver {
     public SeamCarver(Picture picture) {
         this.picture = new Picture(picture);
         this.energy = new double[picture.width()][picture.height()];
-        for (int y = 0; y < energy_height(); y++) {
-            for (int x = 0; x < energy_width(); x++) {
+        for (int y = 0; y < height(); y++) {
+            for (int x = 0; x < width(); x++) {
                 energy[x][y] = energy(x, y);
             }
         }
@@ -27,29 +26,29 @@ public class SeamCarver {
         return this.picture;
     }
     
-    // width of current picture
+//    // width of current picture
+//    public int width() {
+//        return this.picture.width();        
+//    }
+//    
+//    // height of current picture
+//    public int height() {
+//        return this.picture.height();        
+//    }
+    
     public int width() {
-        return this.picture.width();        
-    }
-    
-    // height of current picture
-    public int height() {
-        return this.picture.height();        
-    }
-    
-    public int energy_width() {
         return this.energy.length;
     }
     
-    public int energy_height() {
+    public int height() {
         return this.energy[0].length;
     }
     
     // energy of pixel at column x and row y
     public double energy(int x, int y) {
-        if (x < 0 || x > energy_width() - 1 || y < 0 || y > energy_height() - 1)
+        if (x < 0 || x > width() - 1 || y < 0 || y > height() - 1)
             throw new IndexOutOfBoundsException();        
-        if (x == 0 || x == energy_width() - 1 || y == 0 || y == energy_height() - 1)
+        if (x == 0 || x == width() - 1 || y == 0 || y == height() - 1)
             return BORDER_ENERGY;
         
         Color xminus = picture.get(x-1, y);
@@ -70,32 +69,31 @@ public class SeamCarver {
     
     // sequence of indices for horizontal seam
     public int[] findHorizontalSeam() {
-        StdOut.println("origin: h = " + energy_height() + ", w = " + energy_width());
+//        StdOut.println("origin: h = " + energy_height() + ", w = " + energy_width());
         this.energy = transpose();
-        StdOut.println("transpose: h = " + energy_height() + ", w = " + energy_width());
+//        StdOut.println("transpose: h = " + energy_height() + ", w = " + energy_width());
         int[] seamRowIndex = findVerticalSeam();
         this.energy = transpose();
         return seamRowIndex;
     }
 
     // sequence of indices for vertical seam
-    // each column index in each row
     public int[] findVerticalSeam() {
-        int n = energy_width() * energy_height();
-        int[] seamColIndex = new int[energy_height()];
+        int n = width() * height();
+        int[] seamColIndex = new int[height()];
         int[] pixelTo = new int[n];
         double[] distTo = new double[n];
                 
         for (int i = 0; i < n; i++) {
-            if (i < energy_width())            // start point at first line
+            if (i < width())            // start point at first line
                 distTo[i] = 0;
             else
                 distTo[i] = Double.POSITIVE_INFINITY;
         }
-        for (int row = 0; row < energy_height(); row++) {
-            for (int index = 0; index < energy_width(); index++) {
+        for (int row = 0; row < height(); row++) {
+            for (int index = 0; index < width(); index++) {
                 for (int offset = -1; offset <= 1; offset++) {
-                    if (index + offset < 0 || index + offset > energy_width() - 1 || row + 1 < 0 || row + 1 > energy_height() - 1) {
+                    if (index + offset < 0 || index + offset > width() - 1 || row + 1 < 0 || row + 1 > height() - 1) {
                         continue;
                     } else {
                         // relax
@@ -113,18 +111,18 @@ public class SeamCarver {
         // find min dist in the last row
         double min = Double.POSITIVE_INFINITY;
         int index = -1;
-        for (int j = 0; j < energy_width(); j++) {
-            if (distTo[j + energy_width() * (energy_height() - 1)] < min) {
-                index = j + energy_width() * (energy_height() - 1);
-                min = distTo[j + energy_width() * (energy_height() - 1)];
+        for (int j = 0; j < width(); j++) {
+            if (distTo[j + width() * (height() - 1)] < min) {
+                index = j + width() * (height() - 1);
+                min = distTo[j + width() * (height() - 1)];
             }
         }
 
         // find seam one by one
-        for (int j = 0; j < energy_height(); j++) {
-            int y = energy_height() - j - 1;
-            int x = index - y * energy_width();
-            seamColIndex[energy_height() - 1 - j] = x;
+        for (int j = 0; j < height(); j++) {
+            int y = height() - j - 1;
+            int x = index - y * width();
+            seamColIndex[height() - 1 - j] = x;
             index = pixelTo[index];
         }
 
@@ -142,19 +140,47 @@ public class SeamCarver {
     }
     
     private int matrixIndex(int x, int y) {
-        return energy_width() * y + x;
+        return width() * y + x;
     }
     
     // remove horizontal seam from current picture
     public void removeHorizontalSeam(int[] seam) {
-        if (seam == null)
-            throw new java.lang.IllegalArgumentException();        
+        if (seam == null || picture.width() <= 1 || picture.height() <= 1)
+            throw new java.lang.IllegalArgumentException(); 
+        
+        double[][] new_energy = new double[width()][height()-1];
+        for (int i = 0; i < seam.length; i++) {
+            if (i == seam.length) {
+                for (int j = 0; j < new_energy[i].length; j++) {
+                    energy[i][j] = 1000;
+                }
+            } else {
+                // seam left
+                System.arraycopy(energy[i], 0, new_energy[i], 0, seam[i]);
+                // seam right
+                System.arraycopy(energy[i], seam[i] + 1, new_energy[i], seam[i], height() - seam[i] - 1);
+            }
+        }
+//        transpose();
+//        removeVerticalSeam(seam);
+//        transpose();
     }
     
     // remove vertical seam from current picture
     public void removeVerticalSeam(int[] seam) {
-        if (seam == null)
-            throw new java.lang.IllegalArgumentException();        
+        if (seam == null || picture.width() <= 1 || picture.height() <= 1)
+            throw new java.lang.IllegalArgumentException();
+        
+        transpose();
+        removeHorizontalSeam(seam);
+        transpose();
+//        double[][] new_energy = new double[width()-1][height()];
+//        for (int i = 0; i < seam.length; i++) {
+//            // seam left
+//            System.arraycopy(energy[i], 0, new_energy[i], 0, seam[i]);
+//            // seam right
+//            System.arraycopy(energy[i], seam[i] + 1, new_energy[i], seam[i], height() - seam[i] - 1);
+//        }
     }
     
 }
