@@ -16,7 +16,6 @@ public class SeamCarver {
 //    private static final double MAX_ENERGY = 195075.0;
     private static final int BORDER_ENERGY = 1000;
 
-
     public SeamCarver(Picture picture) {
         this.picture = new Picture(picture);
         energy = new double[picture.width()][picture.height()];
