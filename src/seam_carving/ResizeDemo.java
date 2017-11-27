@@ -1,5 +1,3 @@
-package seam_carving;
-
 /******************************************************************************
  *  Compilation:  javac ResizeDemo.java
  *  Execution:    java ResizeDemo input.png columnsToRemove rowsToRemove
@@ -11,6 +9,7 @@ package seam_carving;
  *  Show the images and print time elapsed to screen.
  *
  ******************************************************************************/
+package seam_carving;
 
 import edu.princeton.cs.algs4.Picture;
 import edu.princeton.cs.algs4.StdOut;
@@ -46,8 +45,9 @@ public class ResizeDemo {
         StdOut.printf("new image size is %d columns by %d rows\n", sc.width(), sc.height());
 
         StdOut.println("Resizing time: " + sw.elapsedTime() + " seconds.");
-        inputImg.show();
-        outputImg.show();
+//        inputImg.show();
+//        outputImg.show();
+        outputImg.save("E:\\after.png");
     }
     
 }

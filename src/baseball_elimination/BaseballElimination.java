@@ -3,6 +3,7 @@ import java.util.ArrayList;
 
 import edu.princeton.cs.algs4.FlowEdge;
 import edu.princeton.cs.algs4.FlowNetwork;
+import edu.princeton.cs.algs4.FordFulkerson;
 import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.StdOut;
 
@@ -107,9 +108,11 @@ public class BaseballElimination {
         if (!teams.contains(team))
             throw new IllegalArgumentException();
         
+        int x = teams.indexOf(team);
         int team_vertices = teams.size();
         int game_vertices = team_vertices*(team_vertices-1)/2;
-        int s_and_t = 2;
+        int s = game_vertices + team_vertices;
+        int s_and_t = s + 1;
         int nodeID = 0;
         int V = game_vertices + team_vertices + s_and_t;
         FlowNetwork fn = new FlowNetwork(V);
@@ -118,11 +121,15 @@ public class BaseballElimination {
                 if (i == j) continue;
                 
                 fn.addEdge(new FlowEdge(i, nodeID, this.games[i][j]));
+                // edge from each game remain
                 fn.addEdge(new FlowEdge(nodeID, game_vertices + i, Integer.MAX_VALUE));
                 fn.addEdge(new FlowEdge(nodeID, game_vertices + j, Integer.MAX_VALUE));
+                nodeID++;
             }
-            fn.addEdge(new FlowEdge(game_vertices + i, w, capacity));
+            fn.addEdge(new FlowEdge(game_vertices + i, V, Math.max(0, wins[x]+remain[x]-wins[i])));
         }
+        
+//        FordFulkerson ff = new FordFulkerson(fn, s, t)
         
         return null;
     }
