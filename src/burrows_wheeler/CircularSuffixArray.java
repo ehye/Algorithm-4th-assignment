@@ -18,7 +18,7 @@ public class CircularSuffixArray {
         if (s == null) throw new IllegalArgumentException();
         this.s = s;
 
-        // quit genius!
+        // quite genius!
         // algorithm: not to store strings; just compare them using number of shifts
         // sort: key => char; value => index
         index = new Integer[length()];
